@@ -4,6 +4,8 @@
 #include "MQTTConnect.h"
 
 const int relayPin = 2;
+const int connectPin = 0;
+const int disconnectPin = 4;
 const char* WIFI_NAME = "Stevens-IoT";
 const char* WIFI_PASS = "nMN882cmg7";
 
@@ -14,6 +16,8 @@ const char* MQtopic = "gelBlaster";         //MQTT Topic (Arena I/II)
 const int mqtt_port = 8883;                 //MQTT TCP/IP port number
 
 void setup() {
+  digitalWrite(connectPin, LOW);
+  digitalWrite(disconnectPin, LOW);
   Serial.begin(115200);
   Serial.println("Test");
   pinMode(relayPin, OUTPUT);

@@ -40,6 +40,8 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 #include <WiFiClientSecure.h>
 
 extern const int relayPin;
+extern const int connectPin;
+extern const int disconnectPin;
 String msg = "";
 //MQTT Setting variables  
 extern const char* mqtt_server;               //MQTT Broker(Server) Address
@@ -80,6 +82,8 @@ String get_wifi_status(int status){
 
 //Initialize WiFi functions and status      
 void wifi_start() { 
+  digitalWrite(connectPin, LOW);
+  digitalWrite(disconnectPin, LOW);
   Serial.begin(115200);
   Serial.print("ESP Board MAC Address:  ");
   Serial.println(WiFi.macAddress());
@@ -97,6 +101,15 @@ void wifi_start() {
     status = WiFi.status();
     Serial.println(get_wifi_status(status));                        
   }
+
+  if(status != WL_CONNECTED){
+      digitalWrite(connectPin, LOW);
+      digitalWrite(disconnectPin, HIGH);
+    } else if(status = WL_CONNECTED){
+      digitalWrite(disconnectPin, LOW);
+      digitalWrite(connectPin, HIGH);
+      }
+  
   Serial.println("\nConnected to the WiFi network");
   Serial.print("ESP32 IP: ");
   Serial.println(WiFi.localIP());
@@ -164,15 +177,6 @@ void mqtt_loop(){
   }
   client.loop();       
 }
-//
-//void on_message(){
-//  Serial.println(msg);
-//  if(msg == "Fire"){
-//  digitalWrite(relayPin, HIGH);
-//  delay(500);
-//  digitalWrite(relayPin, LOW);
-//  Serial.println("Gel fired");
-//  }
-//}
+
 
 #endif
